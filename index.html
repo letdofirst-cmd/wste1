@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoPulse</title>
+<meta name="description" content="Smart waste management: report waste, verify collection with AI, earn EcoCredits.">
+<meta name="theme-color" content="#0F5132">
+<style>
+:root{--bg:#F4FAF6;--ink:#0B241A;--mut:#4E6A5D;--line:#D6E7DC;--card:#fff;--sec:#0F5132;--sec2:#1B7A4D;--danger:#B3413A}
+[data-t=dark]{--bg:#0B1712;--ink:#EAF3EE;--mut:#9FB7AC;--line:#1D3A2C;--card:#102019;--sec:#3FA870;--sec2:#57C88B}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:inherit;text-decoration:none;cursor:pointer}.w{max-width:1040px;margin:auto;padding:0 18px}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav .w{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-height:58px;padding-top:6px;padding-bottom:6px}
+.logo{font-weight:800;color:var(--sec);font-size:18px}.sp{flex:1}#nl{gap:16px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+h1{font-size:34px;line-height:1.15;margin:.3em 0}h2{font-size:20px;margin:.2em 0 .6em}h3{margin:0;font-size:15px}
+.m{color:var(--mut);font-size:13px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;margin:4px 0 10px}
+label{font-size:13px;font-weight:600}
+button{font:inherit;font-weight:700;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.p{background:var(--sec);color:#fff;border-color:var(--sec)}button.d{color:var(--danger);border-color:var(--danger)}button:disabled{opacity:.5;cursor:not-allowed}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700;background:rgba(15,81,50,.12);color:var(--sec)}
+.pill.open{background:rgba(179,65,58,.12);color:var(--danger)}.pill.in_progress{background:rgba(232,163,61,.2);color:#9a6a12}.pill.rejected{background:rgba(78,106,93,.15);color:var(--mut)}
+.tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:16px 0;flex-wrap:wrap}
+.tabs a{padding:8px 2px;font-weight:700;color:var(--mut);border-bottom:2px solid transparent}.tabs a.on{color:var(--sec);border-color:var(--sec)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row input{margin:0;flex:1}.bt{justify-content:space-between;align-items:flex-start}
+.stat b{display:block;font-size:26px}.is{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--card)}
+img.th{max-width:200px;border-radius:10px;display:block;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;padding:7px;border-bottom:1px solid var(--line)}
+#toast{position:fixed;bottom:16px;right:16px;background:var(--card);border:1px solid var(--sec);padding:10px 14px;border-radius:10px;display:none;z-index:9;max-width:300px}
+.hero{padding:44px 18px 20px}section,.w.s{padding-top:26px}.code{font-family:monospace;background:var(--bg);border:1px dashed var(--line);padding:6px 10px;border-radius:8px;font-weight:700}
+footer{padding:30px 0;margin-top:30px;border-top:1px solid var(--line)}
+body{background:radial-gradient(900px 420px at 90% -80px,rgba(27,122,77,.18),transparent),var(--bg)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;padding:58px 18px 34px}.hero h1{font-size:46px;letter-spacing:-.02em}.hero h1 em{font-style:normal;color:var(--sec)}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:34px}.hero h1{font-size:34px}}
+.w.s{padding-top:52px}.sh{text-align:center;max-width:620px;margin:0 auto 24px}.sh h2{font-size:28px;letter-spacing:-.01em;margin:0 0 4px}
+.card{transition:transform .15s,border-color .15s}.g3>.card:hover,.hc:hover{transform:translateY(-2px);border-color:var(--sec)}
+.ico{width:46px;height:46px;border-radius:13px;background:rgba(27,122,77,.14);display:flex;align-items:center;justify-content:center;font-size:23px;margin-bottom:10px}
+.band{background:linear-gradient(135deg,var(--sec),var(--sec2));color:#fff;border-radius:18px;padding:26px 28px;text-align:center}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}@media(max-width:720px){.g4{grid-template-columns:1fr 1fr}}
+details.fq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}details.fq summary{cursor:pointer;font-weight:700}details.fq p{margin:8px 0 0}
+ul.ck{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:13px}ul.ck li{margin-bottom:4px}
+.tl{max-width:640px;margin:0 auto;padding-left:30px}.stp{position:relative;margin-bottom:12px}.stp::before{content:attr(data-n);position:absolute;left:-30px;top:14px;width:22px;height:22px;border-radius:50%;background:var(--sec);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+/* ===== motion & polish ===== */
+:root{--acc:#E8A33D;--ease:cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth}#v{position:relative}
+:focus-visible{outline:2px solid var(--sec2);outline-offset:2px;border-radius:6px}
+.w.s,section{scroll-margin-top:72px}
+nav{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);transition:box-shadow .3s}
+nav.sc{box-shadow:0 8px 24px -14px rgba(11,36,26,.35)}
+#nl a{position:relative;padding:4px 0;color:var(--mut);transition:color .2s}
+#nl a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--sec);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+#nl a:hover,#nl a.on{color:var(--sec)}#nl a:hover::after,#nl a.on::after{transform:scaleX(1)}
+button{transition:transform .18s var(--ease),box-shadow .2s,background .2s,border-color .2s}
+button:hover:not(:disabled){transform:translateY(-1px);border-color:var(--sec)}button:active:not(:disabled){transform:scale(.97)}
+button.p{background:linear-gradient(135deg,var(--sec),var(--sec2))}button.p:hover:not(:disabled){box-shadow:0 10px 22px -10px var(--sec)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--sec2);box-shadow:0 0 0 3px rgba(27,122,77,.18)}
+input,select,textarea{transition:border-color .2s,box-shadow .2s}
+#toast{animation:tin .3s var(--ease)}
+#v:not(.home)>.w{animation:vin .45s var(--ease) both}
+.card{transition:transform .2s var(--ease),border-color .2s,box-shadow .25s}
+a.card:hover,.g2>a.card:hover{transform:translateY(-3px);border-color:var(--sec);box-shadow:0 16px 30px -20px rgba(15,81,50,.5)}
+.sp{position:relative;overflow:hidden}
+.sp::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0),rgba(63,168,112,.18),transparent 60%);opacity:0;transition:opacity .25s;pointer-events:none}
+.sp:hover::before{opacity:1}.g3>.sp:hover{transform:translateY(-3px);box-shadow:0 18px 32px -22px rgba(15,81,50,.55)}
+.ico{transition:transform .3s var(--ease)}.card:hover .ico{transform:scale(1.1) rotate(-4deg)}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease) var(--d,0ms),transform .6s var(--ease) var(--d,0ms)}
+.rv.in{opacity:1;transform:none}
+/* hero */
+.aur{position:absolute;inset:0 0 auto 0;height:760px;overflow:hidden;z-index:-1;pointer-events:none}
+.aur i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.42;animation:drift 18s ease-in-out infinite alternate}
+.aur i:nth-child(1){width:420px;height:420px;background:#57C88B;right:-80px;top:-120px}
+.aur i:nth-child(2){width:340px;height:340px;background:var(--acc);opacity:.2;left:-110px;top:220px;animation-duration:24s}
+[data-t=dark] .aur i{opacity:.2}
+.hero{position:relative}
+.hi{animation:up .7s var(--ease) both;animation-delay:var(--d,0ms)}
+.wd{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
+.wd>span{display:inline-block;transform:translateY(110%);animation:wup .75s var(--ease) forwards}
+.hero h1{font-size:50px;line-height:1.08}
+@media(max-width:760px){.hero h1{font-size:36px}}
+.lv{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 40px 70px -40px rgba(15,81,50,.55)}
+.lv .ph{position:relative;height:150px;border-radius:14px;background:linear-gradient(135deg,#cfe6d8,#8fc6a8);display:flex;align-items:center;justify-content:center;font-size:60px;overflow:hidden;margin-bottom:14px}
+.scan{position:absolute;left:0;right:0;height:34px;background:linear-gradient(transparent,rgba(255,255,255,.6),transparent);animation:scan 2.6s linear infinite}
+.lt{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.trk{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin:18px 0 12px;text-align:center;font-size:11px;font-weight:700;color:var(--mut)}
+.trk::before,.trk::after{content:"";position:absolute;left:12.5%;top:8px;height:3px;border-radius:3px}
+.trk::before{right:12.5%;background:var(--line)}.trk::after{width:calc(75% * var(--p,0));background:var(--sec);transition:width .8s var(--ease)}
+.nd b{position:relative;z-index:1;display:block;width:19px;height:19px;margin:0 auto 5px;border-radius:50%;background:var(--card);border:3px solid var(--line);transition:all .4s var(--ease)}
+.nd.on{color:var(--ink)}.nd.on b{background:var(--sec);border-color:var(--sec);transform:scale(1.15)}
+.lt .pill{white-space:nowrap;flex:none}@media(max-width:760px){.f2{left:-4px}.f1{right:-2px}}
+.msg{display:flex;gap:10px;align-items:center;background:var(--bg);border-radius:12px;padding:10px 12px;min-height:50px}
+.msg .a1{flex:none;width:28px;height:28px;border-radius:50%;background:var(--sec);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.msg p{margin:0}.sw{animation:up .4s var(--ease)}
+.cr{position:absolute;right:16px;bottom:-18px;background:var(--acc);color:#3a2600;font-weight:800;padding:8px 14px;border-radius:99px;box-shadow:0 12px 24px -10px rgba(232,163,61,.8);transform:scale(0) rotate(-8deg);opacity:0;transition:transform .5s cubic-bezier(.3,1.6,.5,1),opacity .3s}
+.lv.won .cr{transform:scale(1) rotate(-3deg);opacity:1}
+.fc{position:absolute;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;box-shadow:0 10px 22px -12px rgba(11,36,26,.45);animation:bob 5s ease-in-out infinite}
+.f1{top:-16px;right:-8px}.f2{top:96px;left:-18px;animation-delay:-2.5s}
+/* ticker + band */
+.band{background:linear-gradient(120deg,var(--sec),var(--sec2),#22935d,var(--sec));background-size:250% 100%;animation:shift 14s ease-in-out infinite alternate}
+.band .m{color:rgba(255,255,255,.85)}.band button.p{background:#fff;color:var(--sec);border-color:#fff}
+.tk{overflow:hidden;margin-top:38px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.tk>div{display:flex;gap:12px;width:max-content;animation:mq 42s linear infinite}.tk:hover>div{animation-play-state:paused}
+.tk span{white-space:nowrap;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-weight:600;font-size:13px}
+/* features showcase */
+.fs{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:stretch}
+.fl{display:flex;flex-direction:column;gap:4px}
+.fi{position:relative;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;text-align:left;font-weight:400;background:transparent;border:1px solid transparent;border-radius:14px;padding:11px 14px 13px;width:100%}
+.fi:hover:not(:disabled){background:var(--card);transform:none;border-color:var(--line)}
+.fi.on{background:var(--card);border-color:var(--line);box-shadow:0 14px 28px -22px rgba(15,81,50,.6)}
+.fi .ico{width:40px;height:40px;font-size:20px;margin:0;background:rgba(27,122,77,.1)}.fi.on .ico{background:var(--sec);filter:none}
+.ft{font-weight:700;font-size:15px;display:block}
+.fd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}.fi.on .fd{grid-template-rows:1fr}
+.fd>span{overflow:hidden;min-height:0;color:var(--mut);font-size:13px;line-height:1.45}.fi.on .fd>span{padding-top:3px}
+.pg{position:absolute;left:14px;right:14px;bottom:5px;height:2px;border-radius:2px;background:var(--line);opacity:0}.fi.on .pg{opacity:1}
+.pg::after{content:"";display:block;height:100%;width:0;border-radius:2px;background:var(--sec)}
+.fi.on .pg::after{animation:fill 6.5s linear forwards}.fs:hover .pg::after,.fs:focus-within .pg::after{animation-play-state:paused}
+.fst{position:relative;min-height:400px;border-radius:24px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:26px;background:linear-gradient(160deg,var(--sec),#083b25)}
+.fst::before{content:"";position:absolute;inset:0;background:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.5px) 0 0/22px 22px;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000,transparent 75%);mask-image:radial-gradient(circle at 50% 50%,#000,transparent 75%)}
+.fst::after{content:"";position:absolute;width:300px;height:300px;right:-90px;top:-90px;border-radius:50%;background:var(--acc);opacity:.22;filter:blur(60px)}
+.mk{position:relative;z-index:1;width:100%;max-width:360px;background:var(--card);color:var(--ink);border-radius:18px;padding:18px;box-shadow:0 30px 60px -25px rgba(0,0,0,.6);animation:pop .5s var(--ease) both}
+.mk>*{animation:up .5s var(--ease) both;animation-delay:calc(var(--i,0)*90ms + 120ms)}
+.mk h4{margin:0 0 12px;font-size:14px}
+.fld{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--bg);margin-bottom:10px;font-size:13px}
+.chs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chs span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:rgba(27,122,77,.14);color:var(--sec)}
+.phx{position:relative;height:100px;border-radius:12px;background:linear-gradient(135deg,#cfe6d8,#9fceb3);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;font-size:38px}
+.bx{background:var(--sec);color:#fff;text-align:center;font-weight:700;border-radius:10px;padding:9px;font-size:13px}
+.mp{position:relative;height:190px;border-radius:12px;margin-bottom:12px;overflow:hidden;background:linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px) 0 0/28px 28px,#dcebe1}
+.mp::before,.mp::after{content:"";position:absolute;background:#fff}.mp::before{left:-10%;right:-10%;top:55%;height:14px;transform:rotate(-8deg)}.mp::after{left:40%;top:-10%;bottom:-10%;width:12px;transform:rotate(12deg)}
+.pn{position:absolute;left:46%;top:34%;font-size:32px;z-index:2;animation:drop .8s var(--ease) both}
+.rg{position:absolute;left:calc(46% + 12px);top:calc(34% + 34px);width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid var(--sec2);border-radius:50%;animation:pulse 2s ease-out infinite}.r2{animation-delay:1s}
+.cd{display:flex;gap:6px;margin-bottom:14px}.cd b{width:40px;height:48px;display:flex;align-items:center;justify-content:center;font:800 22px monospace;background:var(--bg);border:1px dashed var(--sec);border-radius:10px;animation:pop .4s var(--ease) both}
+.av{display:flex;margin-bottom:10px}.av i{width:32px;height:32px;border-radius:50%;background:var(--sec2);color:#fff;font:700 12px/28px system-ui;text-align:center;font-style:normal;border:2px solid var(--card);margin-left:-8px}
+.av i:first-child{margin-left:0}.av i:nth-child(2){background:var(--acc);color:#3a2600}.av i:nth-child(3){background:#3F7E44}.av i:nth-child(4){background:var(--mut)}
+.rw{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.rw:last-child{border:0}.rw .pill{flex:none}
+.rng{position:relative;width:150px;height:150px;margin:0 auto 10px}.rng svg{transform:rotate(-90deg)}.rng circle{fill:none;stroke-width:9;stroke-linecap:round}
+.rng .bg{stroke:var(--line)}.rng .fg{stroke:var(--acc);stroke-dasharray:314;stroke-dashoffset:60;animation:ring 1.3s .3s var(--ease) both}
+.rng div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.rng b{font-size:38px;line-height:1}
+.rwd{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}.rwd>span{font-size:24px}.rwd div{flex:1;font-size:13px}.rwd small{display:block;color:var(--mut)}
+.rwd .bx{padding:6px 12px;font-size:12px}.rwd .bx.off{background:var(--line);color:var(--mut)}.rwd .bx.go{animation:beat 1.6s ease-in-out infinite}
+.lb{display:grid;grid-template-columns:18px 50px 1fr 28px;gap:8px;align-items:center;font-size:13px;padding:7px 0}.lb span{font-weight:800;color:var(--sec)}.lb em{font-style:normal}
+.tr{height:8px;background:var(--line);border-radius:8px;overflow:hidden}.tr i{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--sec),var(--sec2));border-radius:8px;transform-origin:left;animation:grow .9s var(--ease) both;animation-delay:calc(var(--i)*110ms + 250ms)}
+.mn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;text-align:center;font-size:11px;color:var(--mut)}.mn div{background:var(--bg);border-radius:10px;padding:8px 4px}.mn b{display:block;font-size:20px;color:var(--ink)}
+.ad{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.ad:last-child{border:0}
+.ad .vb{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mut)}.ad .vb.ok{background:var(--sec);color:#fff;border-color:var(--sec);animation:pop .5s .6s var(--ease) both}
+@media(max-width:860px){.fs{grid-template-columns:1fr}.fst{min-height:360px}}
+/* how it works */
+.tl{position:relative}.tl::before,.tl::after{content:"";position:absolute;left:10px;top:20px;width:2px;border-radius:2px}
+.tl::before{bottom:20px;background:var(--line)}.tl::after{height:var(--h,0px);background:var(--sec);transition:height .25s linear}
+.stp{transition:border-color .4s,transform .4s var(--ease)}.stp::before{background:var(--line);color:var(--mut);transition:all .4s var(--ease)}
+.stp.on{border-color:var(--sec2)}.stp.on::before{background:var(--sec);color:#fff;transform:scale(1.15)}
+/* faq */
+details.fq summary{list-style:none;display:flex;justify-content:space-between;gap:12px}details.fq summary::-webkit-details-marker{display:none}
+details.fq summary::after{content:"+";font-size:20px;line-height:1;color:var(--sec);transition:transform .3s var(--ease)}details.fq[open] summary::after{transform:rotate(135deg)}
+details.fq[open] p{animation:up .35s var(--ease)}details.fq{transition:border-color .2s}details.fq:hover,details.fq[open]{border-color:var(--sec2)}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes wup{to{transform:none}}@keyframes vin{from{opacity:0;transform:translateY(8px)}}@keyframes tin{from{opacity:0;transform:translateY(10px)}}
+@keyframes drift{to{transform:translate(-70px,50px) scale(1.18)}}@keyframes shift{to{background-position:100% 0}}
+@keyframes mq{to{transform:translateX(-50%)}}@keyframes fill{to{width:100%}}@keyframes pop{from{opacity:0;transform:scale(.92)}}
+@keyframes bob{50%{transform:translateY(-8px)}}@keyframes scan{from{top:-30%}to{top:110%}}
+@keyframes pulse{from{transform:scale(.3);opacity:.9}to{transform:scale(2.4);opacity:0}}@keyframes drop{from{transform:translateY(-50px);opacity:0}}
+@keyframes ring{from{stroke-dashoffset:314}}@keyframes grow{from{transform:scaleX(0)}}@keyframes beat{50%{transform:scale(1.07)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}.wd>span{transform:none}.pg{display:none}}
+</style></head><body>
+<nav><div class="w"><a class="logo" href="#/">🌿 EcoPulse</a><span id="nl" class="row m"></span><span class="sp"></span><button onclick="th()" title="Dark mode">🌓</button><span id="au"></span></div></nav>
+<main id="v"></main>
+<footer><div class="w m">© 2026 EcoPulse · Smart India Hackathon demo · Data is saved in this browser only · <a onclick="rst()" style="text-decoration:underline">Reset demo data</a><div class="row" style="margin-top:8px;gap:14px"><a href="#/">GitHub</a><a href="#/">LinkedIn</a><a href="#/">X</a><a href="#/">Instagram</a></div></div></footer>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),I=id=>document.getElementById(id),val=id=>I(id).value.trim();
+const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const K='ecopulse-single-v1',uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const H=s=>{let h=5381;for(const c of s+'|ep')h=((h*33)^c.charCodeAt(0))>>>0;return h.toString(36)};
+const CONTACT='';let D,PH='',LOC=null,FS='';
+const SL={open:'Open',in_progress:'Solving on the way',resolved:'Solved',rejected:'Not accepted'};
+const CL={garbage:'Uncollected garbage',overflow:'Overflowing bin',drain:'Blocked drain',toilet:'Dirty toilet',littering:'Littering',other:'Other'};
+const TL={city:'City / ward',school:'School',college:'College',hostel:'Hostel',society:'Society',other:'Other'};
+const opt=(o,s)=>Object.entries(o).map(([k,v])=>`<option value="${k}"${k===s?' selected':''}>${v}</option>`).join('');
+const V=h=>{const v=$('#v');v.className=(!location.hash||location.hash==='#/'||location.hash==='#')?'home':'';v.innerHTML=h;fx()},me=()=>D.users.find(u=>u.id===D.me),cn=id=>D.comms.find(c=>c.id===id);
+const nm=id=>(D.users.find(u=>u.id===id)||{}).name||'?',bal=(u,c)=>D.ledger.filter(l=>l.u===u&&l.c===c).reduce((n,l)=>n+l.d,0);
+const go=h=>{if(location.hash===h)route();else location.hash=h};
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.i);toast.i=setTimeout(()=>t.style.display='none',3500)}
+function save(){try{localStorage.setItem(K,JSON.stringify(D));return true}catch(e){toast('Storage is full. Try a smaller photo.');return false}}
+function seed(){const a=uid(),b=uid(),c=uid(),t=Date.now();
+D={me:null,theme:'',users:[{id:a,name:'EcoPulse Admin',email:'admin@ecopulse.demo',pw:H('admin@12345'),role:'admin',area:'Admin',t},{id:b,name:'Demo Head',email:'head@ecopulse.demo',pw:H('demo@12345'),role:'user',area:'Model Town',t},{id:c,name:'Demo Citizen',email:'citizen@ecopulse.demo',pw:H('demo@12345'),role:'user',area:'Model Town',t}],
+comms:[{id:'c1',name:'Ward 12 Cleanliness Group',type:'city',loc:'Model Town',desc:'Demo community. Join code: WARD12',head:b,code:'WARD12',ver:1,t,mem:[b,c]}],
+issues:[{id:uid(),cid:'c1',by:c,title:'Overflowing bin near gate 2',cat:'overflow',desc:'Not collected for 3 days.',loc:'Gate 2',st:'open',resp:'',pts:0,t,img:''}],
+ledger:[],rewards:[{id:uid(),cid:'c1',title:'Free tote bag',desc:'Cloth bag',cost:10,on:1}],reds:[]};save()}
+function load(){try{D=JSON.parse(localStorage.getItem(K))}catch(e){}if(!D||!D.users)seed()}
+function rst(){if(confirm('Delete all data in this browser and restore the demo data?')){localStorage.removeItem(K);seed();go('#/')}}
+function th(){D.theme=D.theme==='dark'?'':'dark';save();document.documentElement.dataset.t=D.theme}
+function sc(id){go('#/'+id)}
+function nav(){const u=me();$('#nl').innerHTML=`<a data-s="features" onclick="sc('features')">Features</a><a data-s="how" onclick="sc('how')">How it works</a><a data-s="about" onclick="sc('about')">About</a><a data-s="faq" onclick="sc('faq')">FAQ</a><a data-s="contact" onclick="sc('contact')">Contact</a>${u?'<a href="#/app">Dashboard</a>':''}${u&&u.role==='admin'?'<a href="#/admin">Admin</a>':''}`;
+$('#au').innerHTML=u?'<button onclick="out()">Sign out</button>':'<button class="p" onclick="go(\'#/login\')">Sign in</button>'}
+function out(){D.me=null;save();go('#/')}
+const tabs=(l,cur,base)=>`<div class="tabs">${l.map(([k,x])=>`<a class="${k===cur?'on':''}" href="${base}/${k}">${x}</a>`).join('')}</div>`;
+
+/* ---------- auth ---------- */
+function vAuth(s){V(`<div class="w" style="max-width:440px;padding-top:36px"><div class="card"><h2>${s?'Create your account':'Sign in to EcoPulse'}</h2>${s?'<label>Full name</label><input id="an" maxlength="80"><label>City / ward / locality</label><input id="aa" maxlength="120" placeholder="e.g. Model Town, Panipat">':''}<label>Email</label><input id="ae" type="email"><label>Password</label><input id="ap" type="password" placeholder="${s?'At least 8 characters':'Your password'}"><button class="p" style="width:100%" onclick="${s?'reg()':'login(val(\'ae\'),I(\'ap\').value)'}">${s?'Create account':'Sign in'}</button><p class="m" style="text-align:center"><a onclick="go('#/${s?'login':'signup'}')" style="color:var(--sec);font-weight:700">${s?'Have an account? Sign in':'New here? Create an account'}</a></p></div>${s?'':`<div class="card" style="margin-top:14px"><b>Try the demo</b><div class="row" style="margin-top:8px"><button onclick="login('citizen@ecopulse.demo','demo@12345')">Citizen</button><button onclick="login('head@ecopulse.demo','demo@12345')">Community head</button><button onclick="login('admin@ecopulse.demo','admin@12345')">Admin</button></div></div>`}</div>`)}
+function login(e,p){const u=D.users.find(x=>x.email===e.trim().toLowerCase()&&x.pw===H(p));if(!u)return toast('Invalid email or password.');D.me=u.id;save();go(u.role==='admin'?'#/admin':'#/app')}
+function reg(){const n=val('an'),a=val('aa'),e=val('ae').toLowerCase(),p=I('ap').value;
+if(!n||!a)return toast('Enter your name and locality.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return toast('Enter a valid email address.');
+if(p.length<8)return toast('Password must be at least 8 characters.');if(D.users.some(u=>u.email===e))return toast('An account with that email already exists.');
+D.users.push({id:uid(),name:n,email:e,pw:H(p),role:'user',area:a,t:Date.now()});save();login(e,p)}
+
+/* ---------- home ---------- */
+function vHome(tab){const u=me(),A={r:D.issues.length,s:D.issues.filter(i=>i.st==='resolved').length,c:D.comms.length,p:D.ledger.filter(l=>l.d>0).reduce((n,l)=>n+l.d,0)};const S={home:`<div class="aur"><i></i><i></i></div><div class="w hero"><div><span class="pill hi">🌿 Smart waste management</span><h1>${wd('See a problem. Report it. Watch it get cleaned.',120)}</h1><p class="m hi" style="--d:700ms;max-width:520px;font-size:16px">EcoPulse gives every ward, school, college and hostel one place to report garbage, overflowing bins and blocked drains, follow each fix, and reward the people who help.</p><div class="row hi" style="--d:820ms"><button class="p" onclick="go('${u?'#/app':'#/signup'}')">${u?'Open dashboard':'Get started'}</button><button onclick="sc('how')">See how it works</button></div><p class="m hi" style="--d:940ms;margin-top:14px">✔ Photo + live location &nbsp; ✔ Clear status updates &nbsp; ✔ EcoCredits for every fix</p></div>
+<div class="hi" style="--d:450ms"><div class="lv" id="lv"><span class="fc f1">📍 Live location</span><span class="fc f2">📷 Photo added</span><div class="ph">🗑️<i class="scan"></i></div><div class="lt"><div><h3>Overflowing bin near gate 2</h3><div class="m">Model Town · Demo Citizen</div></div><span class="pill open" id="lp">Open</span></div><div class="trk">${['Reported','Reviewing','Solved','Rewarded'].map(x=>`<div class="nd"><b></b>${x}</div>`).join('')}</div><div class="msg"><span class="a1">H</span><p class="m" id="lm"></p></div><div class="cr" id="lc">🪙 +<b class="n">10</b> EcoCredits</div></div></div></div>
+<div class="w"><div class="band g4">${[[A.r,'reports filed'],[A.s,'reports solved'],[A.c,'communities'],[A.p,'EcoCredits issued']].map(x=>`<div><b class="cnt" data-to="${x[0]}" style="font-size:32px;display:block">0</b><span style="opacity:.85;font-size:13px">${x[1]}</span></div>`).join('')}</div></div>
+<div class="tk" aria-hidden="true"><div>${[...Array(2)].map(()=>['🗑️ Uncollected garbage','🏘️ Wards','🚮 Overflowing bins','🏫 Schools','🌊 Blocked drains','🎓 Colleges','🚽 Dirty toilets','🛏️ Hostels','🍬 Littering','🏢 Housing societies'].map(x=>`<span>${x}</span>`).join('')).join('')}</div></div>`,
+features:`<div class="w s" id="features"><div class="sh rv"><h2>Everything a clean city needs</h2><p class="m">Eight connected tools that take a problem from a citizen's report to a solved fix.</p></div><div class="fs rv"><div class="fl" role="tablist" aria-label="Features">${FT.map((f,k)=>`<button role="tab" class="fi${k?'':' on'}" data-k="${k}" aria-selected="${!k}"><span class="ico">${f[0]}</span><span><span class="ft">${f[1]}</span><span class="fd"><span>${f[2]}</span></span></span><i class="pg"></i></button>`).join('')}</div><div class="fst" id="fst" role="tabpanel" aria-live="polite"></div></div></div>
+<div class="w s"><div class="sh rv"><h2>What you can report</h2><p class="m">Pick the closest category so the right person can act quickly.</p></div><div class="g3">${[['🗑️','Uncollected garbage','Heaps of waste that have not been picked up.'],['🚮','Overflowing bin','Public or campus bins that are full and spilling over.'],['🌊','Blocked drain','Clogged drains and standing water that spread dirt and mosquitoes.'],['🚽','Dirty toilet or washroom','Unclean public toilets, school or hostel washrooms.'],['🍬','Littering','Wrappers, plastic and dumping in shared spaces.'],['📝','Something else','Any other cleanliness problem your community should know about.']].map((f,k)=>`<div class="card sp rv" style="--d:${k%3*80}ms"><div class="ico">${f[0]}</div><h3>${f[1]}</h3><p class="m" style="margin:4px 0 0">${f[2]}</p></div>`).join('')}</div></div>
+<div class="w s"><div class="band" style="padding:38px 28px"><h2 style="color:#fff">Ready to try EcoPulse?</h2><p class="m">Create a citizen profile and file your first report in under a minute.</p><button class="p" onclick="go('${u?'#/app':'#/signup'}')">Open the workspace</button></div></div>`,
+how:`<div class="w s" id="how"><h2 style="text-align:center">How it works</h2><p class="m" style="text-align:center;margin-top:-6px">From report to reward in five steps.</p><div class="tl">${[['Citizen reports waste','Photo, location and category in under a minute.'],['Worker receives task',"The nearest worker gets the job on today's route."],['QR scan','The worker scans the household or bin QR code.'],['AI verifies','The camera classifies the waste and checks segregation.'],['Waste collected, EcoCredits earned',"Credits land in the citizen's wallet instantly."]].map((x,k)=>`<div class="card stp" data-n="${k+1}"><h3>${x[0]}</h3><p class="m" style="margin:2px 0 0">${x[1]}</p></div>`).join('')}</div></div>
+<div class="w s"><div class="sh rv"><h2>Three roles, one workflow</h2><p class="m">Everyone knows what they can do and what happens next.</p></div><div class="g3">${[['🙋','Citizen',['Join communities with a code','Report problems with photo and location','Follow the status and read the head\'s reply','Earn EcoCredits and redeem rewards']],['🧑‍💼','Community head',['Create a community and share its join code','Reply to reports: solving, solved or not valid','Award 0-100 EcoCredits once per solved report','Add rewards and mark redemptions as given']],['🛡️','Admin',['See every report and community','Verify trusted communities','View users and platform totals','Oversight only; heads resolve reports']]].map((r,k)=>`<div class="card sp rv" style="--d:${k*90}ms"><div class="ico">${r[0]}</div><h3>${r[1]}</h3><ul class="ck">${r[2].map(t=>`<li>${t}</li>`).join('')}</ul></div>`).join('')}</div></div>
+<div class="w s"><div class="band" style="padding:38px 28px"><h2 style="color:#fff">Ready to try EcoPulse?</h2><p class="m">Create a citizen profile and file your first report in under a minute.</p><button class="p" onclick="go('${u?'#/app':'#/signup'}')">Open the workspace</button></div></div>`,
+about:`<div class="w s" id="about"><div class="sh rv"><h2>About EcoPulse</h2><p class="m">A Smart India Hackathon project on smart waste management.</p></div><div class="g2"><div class="card"><h3>🎯 The problem</h3><p class="m" style="margin:6px 0 0">Cleanliness complaints get lost in phone calls and group chats. Nobody can see who is responsible, and nobody is thanked when something gets fixed.</p></div><div class="card"><h3>💡 Our approach</h3><p class="m" style="margin:6px 0 0">Put reports, owners and rewards in one place. Every report has a status, every fix has a note, and every helper earns credit.</p></div></div><div class="row" style="margin-top:14px;gap:8px;justify-content:center">${[['#FD9D24','SDG 11 · Sustainable cities'],['#BF8B2E','SDG 12 · Responsible consumption'],['#3F7E44','SDG 13 · Climate action']].map(x=>`<span class="pill" style="background:${x[0]};color:#fff">${x[1]}</span>`).join('')}</div></div>
+<div class="w s"><div class="sh rv"><h2>Built for every kind of community</h2><p class="m">One head, many members, clear accountability.</p></div><div class="g3">${[['🏘️','Wards and neighbourhoods','Residents report street-level problems and the ward head tracks each one to closure.'],['🏫','Schools','Students and staff flag dirty corridors, toilets and playgrounds.'],['🎓','Colleges','Clubs and departments keep classrooms, canteens and grounds clean.'],['🛏️','Hostels','Residents report washroom and mess issues; the warden replies with updates.'],['🏢','Housing societies','Committees manage bins, drains and common areas in one place.'],['🤝','Anyone else','Create a community for any group and invite people with a join code.']].map((f,k)=>`<div class="card sp rv" style="--d:${k%3*80}ms"><div class="ico">${f[0]}</div><h3>${f[1]}</h3><p class="m" style="margin:4px 0 0">${f[2]}</p></div>`).join('')}</div></div>
+<div class="w s"><div class="band" style="padding:38px 28px"><h2 style="color:#fff">Ready to try EcoPulse?</h2><p class="m">Create a citizen profile and file your first report in under a minute.</p><button class="p" onclick="go('${u?'#/app':'#/signup'}')">Open the workspace</button></div></div>`,
+faq:`<div class="w s" id="faq" style="max-width:760px"><div class="sh rv"><h2>Frequently asked questions</h2></div>${[['How do I join a community?','Ask the community head for the join code, open your dashboard and enter it under Join a community.'],['How do I earn EcoCredits?','When the community head marks your report as solved, they can award 0-100 EcoCredits. Each report pays out once.'],['Can a head give points to themself?','No. Points cannot be awarded for a report the head filed themself.'],['Who can see my reports?','Members of the community, its head and the admin. People outside the community cannot see them.'],['What photos can I upload?','Any phone photo. It is resized to a small JPEG automatically before saving.'],['Where is my data stored?','In this demo, only in your own browser. Clearing browser data or using Reset demo data removes it.']].map(x=>`<details class="fq"><summary>${x[0]}</summary><p class="m">${x[1]}</p></details>`).join('')}</div>`,
+contact:`<div class="w s" id="contact" style="max-width:680px"><h2>Talk to the team</h2><p class="m" style="margin-top:-6px">Pilot for your city or ward? Send us a note.</p><form class="card" onsubmit="cmsg(event)"><label>Name</label><input id="cn" required maxlength="80" placeholder="Your name"><label>Email</label><input id="ce" type="email" required maxlength="254" placeholder="you@example.com"><label>Message</label><textarea id="cm" rows="4" required maxlength="1500"></textarea><button class="p">Send message</button></form></div>`};V(S[tab]||S.home)}
+
+function cmsg(e){e.preventDefault();if(!CONTACT)return toast('Contact email is not set yet. Add it in index.html (CONTACT).');
+location.href='mailto:'+CONTACT+'?subject='+encodeURIComponent('EcoPulse message from '+val('cn'))+'&body='+encodeURIComponent(val('cm')+'\n\n'+val('cn')+' <'+val('ce')+'>')}
+/* ---------- communities ---------- */
+function vApp(){const u=me(),cs=D.comms.filter(c=>c.mem.includes(u.id)),op=s=>D.issues.filter(i=>i.cid===s&&(i.st==='open'||i.st==='in_progress')).length;
+V(`<div class="w"><h1>Hi ${E(u.name.split(' ')[0])}, your communities</h1><div class="g3"><div class="card stat"><b>${cs.length}</b><span class="m">communities</span></div><div class="card stat"><b>${cs.reduce((n,c)=>n+op(c.id),0)}</b><span class="m">open reports</span></div><div class="card stat"><b>${D.ledger.filter(l=>l.u===u.id&&l.d>0).reduce((n,l)=>n+l.d,0)}</b><span class="m">EcoCredits earned</span></div></div>
+<div class="g2" style="margin:16px 0"><div class="card"><h2>Join a community</h2><label>Join code</label><input id="jc" maxlength="16" style="text-transform:uppercase" placeholder="e.g. WARD12"><button class="p" onclick="join()">Join</button></div>
+<div class="card"><h2>Create a community</h2><label>Name</label><input id="cnm" maxlength="80"><label>Type</label><select id="cty">${opt(TL)}</select><label>Area</label><input id="clo" maxlength="160"><button class="p" onclick="mk()">Create</button></div></div>
+<h2>My communities</h2><div class="g2">${cs.map(c=>`<a class="card" href="#/c/${c.id}/report"><span class="pill">${TL[c.type]}</span>${c.ver?' <span class="pill">✔ Verified</span>':''}${c.head===u.id?' <span class="pill in_progress">You are the head</span>':''}<h3 style="margin-top:8px">${E(c.name)}</h3><div class="m">${E(c.loc)}</div><div class="m">${c.mem.length} members · ${op(c.id)} open · ${bal(u.id,c.id)} your credits</div></a>`).join('')||'<p class="m">Nothing yet. Join with a code or create one.</p>'}</div>
+<h2 style="margin-top:22px">EcoCredit history</h2><div class="card"><table>${D.ledger.filter(l=>l.u===u.id).sort((a,b)=>b.t-a.t).map(l=>`<tr><td>${E(l.r)}<div class="m">${E(cn(l.c).name)} · ${new Date(l.t).toLocaleDateString()}</div></td><td style="text-align:right;font-weight:700">${l.d>0?'+':''}${l.d}</td></tr>`).join('')||'<tr><td class="m">No EcoCredits yet.</td></tr>'}</table></div></div>`)}
+function join(){const c=D.comms.find(x=>x.code===val('jc').toUpperCase());if(!c)return toast('No community found for that code.');const u=me();if(!c.mem.includes(u.id)){c.mem.push(u.id);save()}go('#/c/'+c.id+'/report')}
+function mk(){const n=val('cnm'),u=me();if(n.length<3)return toast('Community name must be at least 3 characters.');if(D.comms.filter(c=>c.head===u.id).length>=10)return toast('You can lead at most 10 communities.');
+let code;do{code=Math.random().toString(36).slice(2,8).toUpperCase()}while(D.comms.some(c=>c.code===code));
+const c={id:uid(),name:n,type:val('cty'),loc:val('clo'),desc:'',head:u.id,code,ver:0,t:Date.now(),mem:[u.id]};D.comms.push(c);save();toast('Created. Join code: '+code);go('#/c/'+c.id+'/manage')}
+
+/* ---------- issues ---------- */
+const rf=i=>`<details style="margin-top:8px"><summary class="m" style="cursor:pointer;font-weight:700">Respond</summary><select id="s${i.id}">${opt({in_progress:'Solving on the way',resolved:'Solved',rejected:'Not a valid report'},i.st)}</select><textarea id="m${i.id}" maxlength="500" placeholder="Message to the reporter">${E(i.resp)}</textarea><label>EcoCredits (0-100, paid once on first solve)</label><input id="p${i.id}" type="number" min="0" max="100" value="10"><button class="p" onclick="rs('${i.id}')">Save</button></details>`;
+const ic=(i,hd,adm)=>`<div class="is"><div class="row bt"><div><h3>${E(i.title)}</h3><div class="m">${adm?E(cn(i.cid).name)+' · ':''}${CL[i.cat]} · ${E(i.loc||(i.gps?'Live location '+i.gps.map(x=>x.toFixed(4)).join(', '):''))}${hd||adm?' · by '+E(nm(i.by)):''} · ${new Date(i.t).toLocaleDateString()}</div>${i.desc?`<p style="margin:6px 0 0">${E(i.desc)}</p>`:''}</div><span class="pill ${i.st}">${SL[i.st]}</span></div>${i.img?`<img class="th" alt="Report photo" src="${E(i.img)}">`:''}${i.resp?`<p class="m"><b>Update:</b> ${E(i.resp)}${i.pts?' · +'+i.pts+' EcoCredits':''}</p>`:''}${hd?rf(i):''}</div>`;
+function pho(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,800/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=im.width*s;cv.height=im.height*s;cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);PH=cv.toDataURL('image/jpeg',.6);const p=I('pv');p.src=PH;p.style.display='block'};im.src=r.result};r.readAsDataURL(f)}
+function gps(){const m=I('gm');if(!navigator.geolocation){m.textContent='Location is not available on this device.';return}m.textContent='Getting your location…';navigator.geolocation.getCurrentPosition(p=>{LOC=[p.coords.latitude,p.coords.longitude];m.textContent='Live location captured.'},()=>{m.textContent='Could not get your location. You can still type it.'},{enableHighAccuracy:true,timeout:10000})}
+function sub(id){const t=val('it'),l=val('il');if(t.length<3)return toast('Add a short title.');if(!l&&!LOC)return toast('Type the location or use live location.');
+D.issues.push({id:uid(),cid:id,by:me().id,title:t,cat:val('ic'),desc:val('id'),loc:l,gps:LOC,st:'open',resp:'',pts:0,t:Date.now(),img:PH});
+if(!save()){D.issues.pop();return}PH='';LOC=null;toast('Report submitted. The community head will review it.');go('#/c/'+id+'/reports')}
+function rs(id){const i=D.issues.find(x=>x.id===id),c=cn(i.cid),st=val('s'+id),m=val('m'+id),p=+I('p'+id).value;if(c.head!==me().id)return;
+if(st==='resolved'&&!m)return toast('Add a short note on how it was solved.');if(!Number.isInteger(p)||p<0||p>100)return toast('Points must be a whole number from 0 to 100.');
+if(st==='resolved'&&p>0&&!i.pts){if(i.by===c.head)return toast('Points cannot be awarded for your own report.');i.pts=p;D.ledger.push({u:i.by,c:c.id,d:p,r:'Issue resolved: '+i.title,t:Date.now()})}
+i.st=st;i.resp=m;if(save()){toast('Saved.');route()}}
+
+/* ---------- community page ---------- */
+function vComm(id,tab){const u=me(),c=cn(id);if(!c||!c.mem.includes(u.id))return go('#/app');
+const hd=c.head===u.id,is=D.issues.filter(i=>i.cid===id).sort((a,b)=>b.t-a.t),n=s=>is.filter(i=>i.st===s).length;
+const T=[['report','Report a problem'],['reports','Reports'],['rewards','Rewards']];if(hd)T.push(['manage','Manage']);tab=T.some(t=>t[0]===tab)?tab:'report';let b='';
+if(tab==='report')b=`<div class="card" style="max-width:520px"><h2>Report a cleanliness problem</h2><label>What's wrong</label><input id="it" maxlength="100" placeholder="e.g. Overflowing bin near gate 2"><label>Category</label><select id="ic">${opt(CL)}</select><label>Details (optional)</label><textarea id="id" maxlength="1000"></textarea><label>Location</label><div class="row"><input id="il" maxlength="200" placeholder="Type the location"><button onclick="gps()">📍 Live location</button></div><p class="m" id="gm"></p><label>Photo (optional)</label><input id="ip" type="file" accept="image/*" onchange="pho(this)"><img id="pv" class="th" alt="Preview" style="display:none"><button class="p" style="width:100%;margin-top:10px" onclick="sub('${id}')">Submit report</button></div>`;
+if(tab==='reports'){const f=is.filter(i=>!FS||i.st===FS);b=`<select onchange="FS=this.value;route()" style="max-width:220px"><option value="">All statuses</option>${opt(SL,FS)}</select>${f.map(i=>ic(i,hd)).join('')||'<p class="m">No reports yet.</p>'}`}
+if(tab==='rewards'){const bl=bal(u.id,id),rw=D.rewards.filter(r=>r.cid===id&&(hd||r.on));b=`<div class="g3">${rw.map(r=>`<div class="card"><div class="row bt"><h3>${E(r.title)}</h3><span class="pill">${r.cost} pts</span></div><p class="m">${E(r.desc)}</p>${hd?`<button onclick="rt('${r.id}')">${r.on?'Deactivate':'Activate'}</button> <button class="d" onclick="rd('${r.id}')">Remove</button>`:`<button class="p" ${bl<r.cost?'disabled':''} onclick="rr('${r.id}')">Redeem</button>`}</div>`).join('')||'<p class="m">No rewards yet.</p>'}</div>`}
+if(tab==='manage'){const lb=Object.entries(D.ledger.filter(l=>l.c===id).reduce((o,l)=>(o[l.u]=(o[l.u]||0)+l.d,o),{})).sort((a,b)=>b[1]-a[1]).slice(0,10),rq=D.reds.filter(r=>r.c===id).sort((a,b)=>b.t-a.t);
+b=`<div class="g2" style="align-items:start"><div><div class="card"><h2>Invite members</h2><p class="m">Share this code so people can join.</p><span class="code">${E(c.code)}</span></div><div class="card" style="margin-top:14px"><h2>Add a reward</h2><label>Title</label><input id="rt1" maxlength="80"><label>Description (optional)</label><input id="rd1" maxlength="200"><label>Cost (EcoCredits)</label><input id="rc1" type="number" min="1" value="10"><button class="p" onclick="ar('${id}')">Add reward</button></div></div>
+<div><div class="card"><h2>Leaderboard</h2><table>${lb.map((x,k)=>`<tr><td>#${k+1}</td><td>${E(nm(x[0]))}</td><td>${x[1]} pts</td></tr>`).join('')||'<tr><td class="m">No points yet.</td></tr>'}</table></div><div class="card" style="margin-top:14px"><h2>Redemption requests</h2><table>${rq.map(r=>`<tr><td>${E(nm(r.u))}</td><td>${E(r.title)}</td><td>${r.st==='pending'?`<button onclick="fu('${r.id}')">Mark given</button>`:'Given'}</td></tr>`).join('')||'<tr><td class="m">None yet.</td></tr>'}</table></div></div></div>`}
+V(`<div class="w"><div class="row bt" style="margin-top:20px"><div><span class="pill">${TL[c.type]}</span>${c.ver?' <span class="pill">✔ Verified</span>':''}<h1 style="margin:6px 0 2px">${E(c.name)}</h1><div class="m">${E(c.loc)} ${E(c.desc)}</div></div><div class="card stat" style="text-align:center"><b>${bal(u.id,id)}</b><span class="m">your EcoCredits</span></div></div>
+<div class="g3" style="margin-top:16px"><div class="card stat"><b>${is.length}</b><span class="m">total reports</span></div><div class="card stat"><b>${n('in_progress')}</b><span class="m">in progress</span></div><div class="card stat"><b>${n('resolved')}</b><span class="m">solved</span></div></div>${tabs(T,tab,'#/c/'+id)}${b}</div>`)}
+function ar(id){const t=val('rt1'),k=+I('rc1').value;if(t.length<2||!Number.isInteger(k)||k<1)return toast('Give the reward a title and a cost of 1 or more.');if(D.rewards.filter(r=>r.cid===id).length>=30)return toast('Reward limit reached (30).');
+D.rewards.push({id:uid(),cid:id,title:t,desc:val('rd1'),cost:k,on:1});save();toast('Reward added.');route()}
+function rt(id){const r=D.rewards.find(x=>x.id===id);r.on=+!r.on;save();route()}
+function rd(id){if(!confirm('Remove this reward?'))return;if(D.reds.some(x=>x.rid===id))D.rewards.find(x=>x.id===id).on=0;else D.rewards=D.rewards.filter(x=>x.id!==id);save();route()}
+function rr(id){const r=D.rewards.find(x=>x.id===id),u=me();if(!r||!r.on||bal(u.id,r.cid)<r.cost)return toast('Not enough points yet.');const t=Date.now();
+D.ledger.push({u:u.id,c:r.cid,d:-r.cost,r:'Redeemed: '+r.title,t});D.reds.push({id:uid(),rid:r.id,c:r.cid,u:u.id,title:r.title,cost:r.cost,st:'pending',t});save();toast('Redeemed. Ask your community head to hand it over.');route()}
+function fu(id){D.reds.find(x=>x.id===id).st='given';save();route()}
+
+/* ---------- admin ---------- */
+function vAdmin(tab){const A=[['overview','Overview'],['reports','Reports'],['communities','Communities'],['users','Users']];tab=A.some(t=>t[0]===tab)?tab:'overview';let b='';
+if(tab==='overview')b=`<div class="g3"><div class="card stat"><b>${D.users.filter(u=>u.role!=='admin').length}</b><span class="m">users</span></div><div class="card stat"><b>${D.comms.length}</b><span class="m">communities</span></div><div class="card stat"><b>${D.ledger.filter(l=>l.d>0).reduce((n,l)=>n+l.d,0)}</b><span class="m">EcoCredits issued</span></div></div><div class="g2" style="margin-top:14px"><div class="card"><h2>Reports by status</h2><table>${Object.keys(SL).map(s=>`<tr><td>${SL[s]}</td><td>${D.issues.filter(i=>i.st===s).length}</td></tr>`).join('')}</table></div><div class="card"><h2>Reports by category</h2><table>${Object.keys(CL).map(s=>`<tr><td>${CL[s]}</td><td>${D.issues.filter(i=>i.cat===s).length}</td></tr>`).join('')}</table></div></div>`;
+if(tab==='reports'){const f=D.issues.filter(i=>!FS||i.st===FS).sort((a,b)=>b.t-a.t);b=`<select onchange="FS=this.value;route()" style="max-width:220px"><option value="">All statuses</option>${opt(SL,FS)}</select>${f.map(i=>ic(i,false,true)).join('')||'<p class="m">No reports.</p>'}`}
+if(tab==='communities')b=`<div class="card"><table><tr><th>Community</th><th>Head</th><th>Members</th><th>Reports</th><th>Verified</th></tr>${D.comms.map(c=>`<tr><td><b>${E(c.name)}</b><div class="m">${TL[c.type]} · code ${E(c.code)}</div></td><td>${E(nm(c.head))}</td><td>${c.mem.length}</td><td>${D.issues.filter(i=>i.cid===c.id).length}</td><td><button class="${c.ver?'p':''}" onclick="vf('${c.id}')">${c.ver?'✔ Verified':'Verify'}</button></td></tr>`).join('')}</table></div>`;
+if(tab==='users')b=`<div class="card"><table><tr><th>Name</th><th>Email</th><th>Area</th><th>Role</th><th>Reports</th></tr>${D.users.map(u=>`<tr><td>${E(u.name)}</td><td>${E(u.email)}</td><td>${E(u.area)}</td><td>${u.role}</td><td>${D.issues.filter(i=>i.by===u.id).length}</td></tr>`).join('')}</table></div>`;
+V(`<div class="w"><h1>Admin console</h1><p class="m">Oversight only. Reports are resolved by each community's head.</p>${tabs(A,tab,'#/admin')}${b}</div>`)}
+function vf(id){const c=cn(id);c.ver=+!c.ver;save();route()}
+
+/* ---------- router ---------- */
+function route(){const h=location.hash||'#/',p=h.split('/'),u=me();nav();document.documentElement.dataset.t=D.theme;
+if(h==='#/'||h==='#')return vHome();
+if(['features','how','about','faq','contact'].includes(p[1]))return vHome(p[1]);
+if(p[1]==='login'||p[1]==='signup')return u?go(u.role==='admin'?'#/admin':'#/app'):vAuth(p[1]==='signup');
+if(!u)return go('#/login');
+if(p[1]==='app')return vApp();if(p[1]==='c')return vComm(p[2],p[3]);
+if(p[1]==='admin')return u.role==='admin'?vAdmin(p[2]):go('#/app');vHome()}
+window.addEventListener('hashchange',()=>{route();window.scrollTo(0,0)});
+/* ---------- motion ---------- */
+let IO,TM=[],FK=0;
+const RM=matchMedia('(prefers-reduced-motion:reduce)');
+const wd=(t,d)=>t.split(' ').map((w,i)=>`<span class="wd"><span style="animation-delay:${d+i*70}ms">${w}</span></span>`).join(' ');
+const FT=[['📷','Photo reports','Add a title, category and photo. Photos are resized before saving.'],['📍','Live location','Attach GPS with one tap, or type where the problem is.'],['👥','Private communities','Create a community and share its join code.'],['✅','Clear status','Open, solving on the way, solved or not valid, with a message.'],['🪙','EcoCredits','Heads award 0-100 credits once per solved report.'],['🎁','Rewards','Members redeem credits for rewards their head sets up.'],['🏆','Leaderboard','See who is helping the most in each community.'],['🛡️','Admin oversight','Admins review every report and verify trusted communities.']];
+const M=[
+()=>`<div class="mk"><h4>New report</h4><div class="fld" style="--i:1">Overflowing bin near gate 2</div><div class="chs" style="--i:2"><span>Overflowing bin</span><span>Gate 2</span></div><div class="phx" style="--i:3">🗑️<i class="scan"></i></div><div class="bx" style="--i:4">Submit report</div></div>`,
+()=>`<div class="mk"><div class="mp"><b class="pn">📍</b><i class="rg"></i><i class="rg r2"></i></div><div class="chs" style="--i:2"><span>Live location captured</span><span>Gate 2 · Model Town</span></div></div>`,
+()=>`<div class="mk"><h4>Ward 12 Cleanliness Group</h4><div class="cd">${[...'WARD12'].map((c,i)=>`<b style="animation-delay:${250+i*80}ms">${c}</b>`).join('')}</div><div class="av" style="--i:3"><i>A</i><i>R</i><i>M</i><i>+9</i></div><p class="m" style="--i:4;margin:0">Members join privately with this code.</p></div>`,
+()=>`<div class="mk"><h4>Report status</h4><div class="rw" style="--i:1"><span class="pill open">Open</span><span>Waiting for the community head.</span></div><div class="rw" style="--i:2"><span class="pill in_progress">Solving</span><span>Crew assigned, pickup today.</span></div><div class="rw" style="--i:3"><span class="pill">Solved</span><span>Bin emptied and area swept. ✔</span></div></div>`,
+()=>`<div class="mk" style="text-align:center"><div class="rng"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50"/></svg><div><b class="cnt" data-to="10">0</b><span class="m">EcoCredits</span></div></div><div class="chs" style="--i:2;justify-content:center"><span>Head awards 0–100</span><span>Paid once per fix</span></div></div>`,
+()=>`<div class="mk"><h4>Rewards</h4><div class="rwd" style="--i:1"><span>👜</span><div>Free tote bag<small>10 EcoCredits</small></div><span class="bx go">Redeem</span></div><div class="rwd" style="--i:2"><span>📓</span><div>Recycled notebook<small>25 EcoCredits</small></div><span class="bx off">Locked</span></div></div>`,
+()=>`<div class="mk"><h4>Leaderboard</h4>${[['Asha',90],['Ravi',70],['Meena',45],['Kabir',25]].map((x,i)=>`<div class="lb" style="--i:${i}"><span>${i+1}</span><em>${x[0]}</em><div class="tr"><i style="--w:${x[1]}%;--i:${i}"></i></div><b>${x[1]}</b></div>`).join('')}</div>`,
+()=>`<div class="mk"><div class="mn" style="--i:0"><div><b class="cnt" data-to="24">0</b>reports</div><div><b class="cnt" data-to="6">0</b>communities</div><div><b class="cnt" data-to="120">0</b>credits</div></div><div class="ad" style="--i:1"><span>Ward 12 Cleanliness Group</span><span class="vb ok">✔ Verified</span></div><div class="ad" style="--i:2"><span>Green Valley School</span><span class="vb">Verify</span></div></div>`];
+function cu(el){const to=+el.dataset.to,t0=performance.now();if(RM.matches||!to){el.textContent=to;return}const f=t=>{const p=Math.min(1,(t-t0)/1100);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function setF(k){FK=k;document.querySelectorAll('.fi').forEach((b,i)=>{b.classList.toggle('on',i===k);b.setAttribute('aria-selected',i===k)});const s=I('fst');if(!s)return;s.innerHTML=M[k]();s.querySelectorAll('.cnt').forEach(cu)}
+function live(){const el=I('lv');if(!el)return;const S=[['open','Open','Waiting for the community head to review.'],['in_progress','Solving on the way','“Crew assigned. Pickup today before 5 pm.”'],['resolved','Solved','“Bin emptied and the area swept.”'],['resolved','Solved','“Bin emptied and the area swept.”']];let k=0;
+const draw=()=>{const s=S[k],p=I('lp'),m=I('lm');el.style.setProperty('--p',k/3);el.classList.toggle('won',k===3);el.querySelectorAll('.nd').forEach((n,i)=>n.classList.toggle('on',i<=k));p.className='pill '+s[0];p.textContent=s[1];m.classList.remove('sw');void m.offsetWidth;m.classList.add('sw');m.textContent=s[2];if(k===3){const c=el.querySelector('.cr .n');c.dataset.to=10;cu(c)}};
+draw();if(!RM.matches)TM.push(setInterval(()=>{k=(k+1)%4;draw()},2600))}
+function fx(){TM.forEach(clearInterval);TM=[];if(IO)IO.disconnect();
+document.querySelectorAll('.stat b').forEach(b=>{const n=+b.textContent;if(Number.isInteger(n)&&n>0){b.dataset.to=n;b.classList.add('cnt')}});
+IO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;IO.unobserve(t);if(t.classList.contains('cnt'))cu(t);else{t.classList.add('in');setTimeout(()=>t.classList.remove('rv','in'),1300)}}),{threshold:.12,rootMargin:'0px 0px -5% 0px'});
+document.querySelectorAll('.rv,.cnt').forEach(el=>IO.observe(el));
+if(I('fst')){setF(0);const l=document.querySelector('.fl');l.onclick=e=>{const b=e.target.closest('.fi');if(b&&+b.dataset.k!==FK)setF(+b.dataset.k)};l.onanimationend=e=>{if(e.animationName==='fill')setF((FK+1)%FT.length)}}
+live();onS()}
+function onS(){const n=$('nav');n.classList.toggle('sc',scrollY>8);const cur=(location.hash||'').slice(2);
+document.querySelectorAll('#nl a[data-s]').forEach(a=>a.classList.toggle('on',a.dataset.s===cur));
+const tl=document.querySelector('.tl');if(tl){const r=tl.getBoundingClientRect(),m=innerHeight*.62;tl.style.setProperty('--h',Math.max(0,Math.min(r.height-40,m-r.top-20))+'px');tl.querySelectorAll('.stp').forEach(x=>x.classList.toggle('on',x.getBoundingClientRect().top<m))}}
+addEventListener('scroll',onS,{passive:true});addEventListener('resize',onS);
+document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.sp');if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',e.clientX-r.left+'px');c.style.setProperty('--my',e.clientY-r.top+'px')}});
+
+load();route();
+</script></body></html>
